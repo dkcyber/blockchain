@@ -7,7 +7,7 @@ import (
 	"math/big"
 )
 
-const Bits=20
+const Bits=16
 //工作量证明结构体
 type ProofOfWork struct {
 	Block *Block
@@ -20,6 +20,7 @@ func NewProofOfWork(block *Block)*ProofOfWork{
 	target:=big.NewInt(1)
 	target.Lsh(target,256-Bits)
 
+
 	return &ProofOfWork{block,target}
 }
 
@@ -27,7 +28,7 @@ func NewProofOfWork(block *Block)*ProofOfWork{
 func (pow *ProofOfWork)Run()(uint64,[]byte){
 	var nonce uint64
 	var hash [32]byte
-
+	fmt.Printf("%x\n", pow.Target)
 	for{
 		fmt.Printf("%x\r", hash)
 		//计算sha256
@@ -63,4 +64,15 @@ func(pow *ProofOfWork)PrepareData(nonce uint64)[]byte{
 	data:=bytes.Join(blockInfos,[]byte{})
 
 	return data
+}
+
+//校验一个区块是否有效
+func (pow *ProofOfWork)IsValid()bool{
+	//计算哈希值
+	hash:=sha256.Sum256(pow.PrepareData(pow.Block.Nonce))
+	//构建一个big.Int
+	var tempInt big.Int
+	tempInt.SetBytes(hash[:])
+	//和目标值比较
+	return tempInt.Cmp(pow.Target)==-1
 }

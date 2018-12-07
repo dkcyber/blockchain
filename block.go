@@ -28,7 +28,7 @@ func NewBlock(data string,prevBlockHash []byte)*Block{
 		MerkleRoot:[]byte{},
 		TimpStamp:uint64(time.Now().Unix()),
 		Difficulty:Bits,
-		Nonce:10,
+		//Nonce:10,
 		Data:[]byte(data),
 		Hash:[]byte{},
 	}
