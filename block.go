@@ -12,4 +12,4 @@ type Block struct {
 	Hash []byte //本区块哈希，为了操作方便，实际不含此项
 }
 
-//创建区块
+//创建区块e
