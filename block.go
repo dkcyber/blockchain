@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 //区块结构体
 type Block struct {
 	Version uint64  //版本号
@@ -12,4 +14,24 @@ type Block struct {
 	Hash []byte //本区块哈希，为了操作方便，实际不含此项
 }
 
-//创建区块e
+//创建区块
+func NewBlock(data string,prevBlockHash []byte)*Block{
+	//实例化一个区块，参数先填默认值，后续赋值
+	block:=Block{
+		Version:00,
+		PreBlockHash:prevBlockHash,
+		MerkleRoot:[]byte{},
+		TimpStamp:uint64(time.Now().Unix()),
+		Difficulty:Bits,
+		Nonce:10,
+		Data:[]byte(data),
+		Hash:[]byte{},
+	}
+
+	pow:=NewProofOfWork(&block)
+	nonce,hash:=pow.Run()
+	block.Nonce=nonce
+	block.Hash=hash
+
+	return &block
+}
