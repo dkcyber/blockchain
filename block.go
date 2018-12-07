@@ -1,6 +1,11 @@
 package main
 
-import "time"
+import (
+	"bytes"
+	"encoding/gob"
+	"log"
+	"time"
+)
 
 //区块结构体
 type Block struct {
@@ -33,5 +38,28 @@ func NewBlock(data string,prevBlockHash []byte)*Block{
 	block.Nonce=nonce
 	block.Hash=hash
 
+	return &block
+}
+
+//序列化block,用来储存到数据库中
+func (block *Block)Serialize()[]byte{
+	//用gob序列化block
+	var buff bytes.Buffer
+	encoder:=gob.NewEncoder(&buff)
+	err:=encoder.Encode(block)
+	if err!=nil{
+		log.Panic(err)
+	}
+	return buff.Bytes()
+}
+
+//从数据库中取出数据，反序列化成block
+func Deserialize(data []byte)*Block{
+	var block Block
+	decoder:=gob.NewDecoder(bytes.NewReader(data))
+	err:=decoder.Decode(&block)
+	if err!=nil{
+		log.Panic(err)
+	}
 	return &block
 }
